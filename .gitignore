@@ -1,0 +1,39 @@
+# Environment variables (API keys yaha hote hain - NEVER commit)
+.env
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Dataset files (bade hote hain, GitHub pe push mat karo)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings (optional)
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs and outputs
+outputs/reports/*
+!outputs/reports/.gitkeep
+
+# Model cache/large files
+*.pkl
+*.h5
+*.model
