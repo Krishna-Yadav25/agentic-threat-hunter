@@ -24,6 +24,8 @@ Log Ingestion → Hypothesis Agent → Investigator Agent → Threat Intel Agent
 - **Dataset**: [CICIDS2017](https://www.unb.ca/cic/datasets/ids-2017.html)
 
 ## 📂 Project Structure
+
+```
 agentic-threat-hunter/
 ├── data/
 │   ├── raw/           # original dataset (not tracked in git)
@@ -38,6 +40,7 @@ agentic-threat-hunter/
 ├── dashboard/          # Streamlit UI
 ├── notebooks/          # exploration notebooks
 └── outputs/reports/    # generated incident reports
+```
 
 ## 🚀 Setup Instructions
 
