@@ -3,20 +3,15 @@ import os
 import pandas as pd
 from openai import OpenAI
 
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.config import GROQ_API_KEY
 
-client = OpenAI(
-    api_key=GROQ_API_KEY,
-    base_url="https://api.groq.com/openai/v1"
-)
+client = OpenAI(api_key=GROQ_API_KEY, base_url="https://api.groq.com/openai/v1")
 
 SAMPLE_PATH = "data/sample/sample_logs.csv"
 
 
 def logs_to_text(df: pd.DataFrame, n: int = 15) -> str:
-    """DataFrame ke rows ko readable text me convert karta hai LLM ke liye."""
     subset = df.head(n)
     lines = []
     for idx, row in subset.iterrows():
@@ -30,7 +25,7 @@ def logs_to_text(df: pd.DataFrame, n: int = 15) -> str:
     return "\n".join(lines)
 
 
-def ask_llm_for_hypothesis(log_text: str) -> str:
+def generate_hypothesis(log_text: str) -> str:
     prompt = f"""You are a cybersecurity threat hunting analyst. Below are network flow log entries.
 
 {log_text}
@@ -41,19 +36,27 @@ Give a short hypothesis (2-4 sentences) about what might be happening, and menti
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         max_tokens=500,
+        temperature=0,
         messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content
 
 
-if __name__ == "__main__":
-    df = pd.read_csv(SAMPLE_PATH)
+def run_hypothesis_agent(sample_path: str = SAMPLE_PATH) -> str:
+    df = pd.read_csv(sample_path)
     df.columns = df.columns.str.strip()
 
     log_text = logs_to_text(df)
+    hypothesis = generate_hypothesis(log_text)
+    return hypothesis
+
+
+if __name__ == "__main__":
     print("=== Logs Sent to LLM ===")
-    print(log_text)
+    df = pd.read_csv(SAMPLE_PATH)
+    df.columns = df.columns.str.strip()
+    print(logs_to_text(df))
 
     print("\n=== LLM Hypothesis ===")
-    hypothesis = ask_llm_for_hypothesis(log_text)
+    hypothesis = run_hypothesis_agent()
     print(hypothesis)
