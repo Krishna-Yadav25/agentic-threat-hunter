@@ -26,12 +26,21 @@ def logs_to_text(df: pd.DataFrame, n: int = 15) -> str:
 
 
 def generate_hypothesis(log_text: str) -> str:
+   
     prompt = f"""You are a cybersecurity threat hunting analyst. Below are network flow log entries.
 
 {log_text}
 
-Based on these logs, do you see any patterns that look suspicious or indicative of an attack (e.g., DDoS, port scanning, unusual traffic volume)? 
-Give a short hypothesis (2-4 sentences) about what might be happening, and mention which rows caught your attention and why."""
+Carefully analyze these logs. Do NOT assume there is an attack — many logs represent completely normal traffic. 
+Only flag something as suspicious if there is clear statistical evidence (e.g., abnormal packet ratios, unusually 
+short flow durations combined with high packet counts, repeated identical patterns suggesting automation).
+
+If the traffic looks like normal, everyday usage (varied ports, reasonable flow durations, balanced packet ratios), 
+explicitly state that no strong indicators of an attack were found.
+
+Give a short assessment (2-4 sentences) stating either:
+(a) a specific hypothesis about suspicious activity, with which rows caught your attention and why, or
+(b) that the traffic appears normal, with a brief justification."""
 
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
